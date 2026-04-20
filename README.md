@@ -49,6 +49,49 @@ python3 train.py --data-path "WA_Fn-UseC_-Telco-Customer-Churn 2.csv" --sample-s
 uvicorn app:app --reload --host 0.0.0.0 --port 8000
 ```
 
+You should see:
+
+```text
+Application startup complete.
+Uvicorn running on http://0.0.0.0:8000
+```
+
+## 5) API usage (endpoint guide)
+
+Base URL (local):
+
+```text
+http://localhost:8000
+```
+
+### `GET /health`
+Returns service health and active model metadata.
+
+Example:
+
+```bash
+curl http://localhost:8000/health
+```
+
+Example response:
+
+```json
+{
+  "status": "healthy",
+  "model": "XGBoost",
+  "ab_enabled": true,
+  "challenger_loaded": true
+}
+```
+
+### `POST /predict`
+Scores one customer record and returns:
+- `churn_probability`
+- `risk_level`
+- `recommended_action`
+- `model_version`
+- `experiment_group`
+
 Health check:
 
 ```bash
@@ -84,7 +127,19 @@ curl -X POST "http://localhost:8000/predict" \
   }'
 ```
 
-## 5) Run batch scoring
+Example response:
+
+```json
+{
+  "churn_probability": 0.7421,
+  "risk_level": "CRITICAL",
+  "recommended_action": "Immediate retention call + loyalty offer",
+  "model_version": "XGBoost",
+  "experiment_group": "CONTROL"
+}
+```
+
+## 6) Run batch scoring
 
 Input file should include customer columns expected by the feature pipeline.
 
@@ -96,7 +151,7 @@ Outputs:
 - `predictions_YYYYMMDD.csv`
 - `high_risk_customers.csv`
 
-## 6) Run drift monitoring
+## 7) Run drift monitoring
 
 Compares reference training data vs current production snapshot.
 
@@ -109,7 +164,7 @@ python3 monitor_drift.py \
 
 If `drift_report.json` has `"should_retrain": true`, retrain via `train.py`.
 
-## 7) Run with Docker
+## 8) Run with Docker
 
 Build:
 
@@ -129,7 +184,7 @@ Then test:
 curl http://localhost:8000/health
 ```
 
-## 8) A/B model routing in API
+## 9) A/B model routing in API
 
 `app.py` supports control/challenger routing (deterministic by `customerID` hash).
 
@@ -145,7 +200,7 @@ Example:
 AB_TEST_ENABLED=true AB_SPLIT_RATIO=0.2 uvicorn app:app --reload
 ```
 
-## 9) GitHub Actions
+## 10) GitHub Actions
 
 Included workflows:
 - `.github/workflows/ci.yml`  
@@ -153,7 +208,7 @@ Included workflows:
 - `.github/workflows/retrain-on-drift.yml`  
   Runs drift detection and retrains only if drift threshold is exceeded.
 
-## 10) Troubleshooting
+## 11) Troubleshooting
 
 - **ModuleNotFoundError**: run `pip install -r requirements.txt` in active environment.
 - **Missing artifacts on API startup**: run `train.py` first to generate model files.
