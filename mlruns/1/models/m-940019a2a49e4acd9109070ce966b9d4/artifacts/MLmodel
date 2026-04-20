@@ -1,0 +1,23 @@
+artifact_path: /Users/enginer/Desktop/INDABAX/mlruns/1/models/m-940019a2a49e4acd9109070ce966b9d4/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.11.14
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.11.1
+model_id: m-940019a2a49e4acd9109070ce966b9d4
+model_size_bytes: 15972154
+model_uuid: m-940019a2a49e4acd9109070ce966b9d4
+prompts: null
+run_id: a3f47073603945d481a326706222d7e5
+utc_time_created: '2026-04-20 12:29:35.087331'
