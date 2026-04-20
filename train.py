@@ -6,8 +6,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
-import mlflow
-import mlflow.sklearn
 import numpy as np
 import pandas as pd
 from imblearn.over_sampling import SMOTE
@@ -194,6 +192,9 @@ def main() -> None:
         json.dump(config, f, indent=2)
 
     if not args.skip_mlflow:
+        import mlflow
+        import mlflow.sklearn
+
         mlflow.set_tracking_uri(args.tracking_uri)
         mlflow.set_experiment(args.experiment)
         with mlflow.start_run(run_name=f"train-{winner['name'].replace(' ', '_')}"):
